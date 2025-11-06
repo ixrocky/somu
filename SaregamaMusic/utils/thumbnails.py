@@ -42,7 +42,7 @@ def get_overlay_content_box(overlay_img: Image.Image) -> tuple:
     binary = alpha.point(lambda p: 255 if p > threshold else 0)
     return binary.getbbox()
 
-async def gen_thumb(videoid: str):
+async def get_thumb(videoid: str):
     url = f"https://www.youtube.com/watch?v={videoid}"
     try:
         results = VideosSearch(url, limit=1)
@@ -71,10 +71,10 @@ async def gen_thumb(videoid: str):
         background = Image.alpha_composite(gradient, blurred)
 
         draw = ImageDraw.Draw(background)
-        font_path = "SaregamaMusic/assets/font3.ttf"
+        font_path = "ROCKY_MUSIC/assets/font3.ttf"
 
         # Overlay and bounding box detection
-        player = Image.open("SaregamaMusic/assets/nand.png").convert("RGBA").resize((1280, 720))
+        player = Image.open("ROCKY_MUSIC/assets/nand.png").convert("RGBA").resize((1280, 720))
         overlay_box = get_overlay_content_box(player)  # (x1, y1, x2, y2)
         content_x1, content_y1, content_x2, content_y2 = overlay_box
         background.paste(player, (0, 0), player)
@@ -109,17 +109,17 @@ async def gen_thumb(videoid: str):
         draw.text((text_x, title_y), short_title, (255, 255, 255), font=title_font)
 
         info_text = f"{short_channel} • {views}"
-        info_font = ImageFont.truetype("SaregamaMusic/assets/font2.ttf", 22)
+        info_font = ImageFont.truetype("ROCKY_MUSIC/assets/font2.ttf", 22)
         draw.text((text_x, info_y), info_text, (200, 200, 200), font=info_font)
 
-        time_font = ImageFont.truetype("SaregamaMusic/assets/font2.ttf", 26)
+        time_font = ImageFont.truetype("ROCKY_MUSIC/assets/font2.ttf", 26)
         duration_text = duration if ":" in duration else f"00:{duration.zfill(2)}"
         time_display = f"00:00 / {duration_text}"
         draw.text((text_x, time_y), time_display, (200, 200, 200), font=time_font)
 
         # Watermark
-        watermark_font = ImageFont.truetype("SaregamaMusic/assets/font2.ttf", 24)
-        watermark_text = "@WTF_Owner"
+        watermark_font = ImageFont.truetype("ROCKY_MUSIC/assets/font2.ttf", 24)
+        watermark_text = "@MrRockyTg"
         text_size = draw.textsize(watermark_text, font=watermark_font)
         x = background.width - text_size[0] - 25
         y = background.height - text_size[1] - 25
@@ -138,6 +138,6 @@ async def gen_thumb(videoid: str):
         return tpath
 
     except Exception as e:
-        print(f"[gen_thumb Error] {e}")
+        print(f"[get_thumb Error] {e}")
         traceback.print_exc()
         return None
